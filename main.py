@@ -7,11 +7,15 @@ conn1 = sqlite3.connect('planets.db')
 
 pd.read_sql("""SELECT * FROM planets;""", conn1)
 
+# Find the real moon column name
+planet_columns = pd.read_sql("PRAGMA table_info(planets);", conn1)["name"].tolist()
+moon_col = [col for col in planet_columns if "moon" in col.lower()][0]
+
 # STEP 1
-df_no_moons = pd.read_sql("""
+df_no_moons = pd.read_sql(f"""
 SELECT *
 FROM planets
-WHERE moons = 0;
+WHERE {moon_col} = 0;
 """, conn1)
 
 # STEP 2
@@ -31,10 +35,10 @@ WHERE mass <= 1.00;
 """, conn1)
 
 # STEP 4
-df_mass_moon = pd.read_sql("""
+df_mass_moon = pd.read_sql(f"""
 SELECT *
 FROM planets
-WHERE moons >= 1
+WHERE {moon_col} >= 1
 AND mass < 1.00;
 """, conn1)
 
@@ -86,7 +90,7 @@ SELECT * FROM babe_ruth_stats;
 
 # STEP 9
 df_ruth_years = pd.read_sql("""
-SELECT COUNT(*) 
+SELECT COUNT(*)
 FROM babe_ruth_stats;
 """, conn3)
 
