@@ -92,7 +92,7 @@ SELECT * FROM babe_ruth_stats;
 
 # STEP 9
 df_ruth_years = pd.read_sql("""
-SELECT COUNT(*) 
+SELECT COUNT(*)
 FROM babe_ruth_stats;
 """, conn3)
 
@@ -113,10 +113,10 @@ GROUP BY team;
 
 # STEP 12
 df_at_bats = pd.read_sql("""
-SELECT team, AVG(AB) AS average_at_bats
+SELECT team, AVG(at_bats) AS average_at_bats
 FROM babe_ruth_stats
 GROUP BY team
-HAVING AVG(AB) > 200;
+HAVING AVG(at_bats) > 200;
 """, conn3)
 
 conn1.close()
