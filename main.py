@@ -3,18 +3,15 @@ import sqlite3
 
 ##### Part I: Basic Filtering #####
 
-# Create the connection
-# Note the connect is 'conn1' since there will be multiple .db used
 conn1 = sqlite3.connect('planets.db')
 
-# Select all
-pd.read_sql("""SELECT * FROM planets; """, conn1)
+pd.read_sql("""SELECT * FROM planets;""", conn1)
 
 # STEP 1
 df_no_moons = pd.read_sql("""
 SELECT *
 FROM planets
-WHERE number_of_moons = 0;
+WHERE moons = 0;
 """, conn1)
 
 # STEP 2
@@ -37,7 +34,7 @@ WHERE mass <= 1.00;
 df_mass_moon = pd.read_sql("""
 SELECT *
 FROM planets
-WHERE number_of_moons >= 1
+WHERE moons >= 1
 AND mass < 1.00;
 """, conn1)
 
@@ -50,13 +47,8 @@ WHERE color LIKE '%blue%';
 
 ##### Part 3: Ordering and Limiting #####
 
-# STEP 0
-
-# Create a connection
-# Note the connect is 'conn2' since they will be multiple .db used
 conn2 = sqlite3.connect('dogs.db')
 
-# Select all
 pd.read_sql("SELECT * FROM dogs;", conn2)
 
 # STEP 6
@@ -84,29 +76,23 @@ ORDER BY age DESC
 LIMIT 4;
 """, conn2)
 
-df_4_oldest = df_4_oldest.sort_values(by="breed")
-
 ##### Part 4: Aggregation #####
 
-# STEP 0
-
-# Create a connection
-# Note the connect is 'conn3' since they will be multiple .db used
 conn3 = sqlite3.connect('babe_ruth.db')
 
-# Select all
 pd.read_sql("""
-SELECT * FROM babe_ruth_stats; """, conn3)
+SELECT * FROM babe_ruth_stats;
+""", conn3)
 
 # STEP 9
 df_ruth_years = pd.read_sql("""
-SELECT COUNT(*) AS total_years
+SELECT COUNT(*) 
 FROM babe_ruth_stats;
 """, conn3)
 
 # STEP 10
 df_hr_total = pd.read_sql("""
-SELECT SUM(HR) AS total_home_runs
+SELECT SUM(HR)
 FROM babe_ruth_stats;
 """, conn3)
 
