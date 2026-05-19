@@ -3,19 +3,17 @@ import sqlite3
 
 ##### Part I: Basic Filtering #####
 
+# Create the connection
 conn1 = sqlite3.connect('planets.db')
 
+# Select all
 pd.read_sql("""SELECT * FROM planets;""", conn1)
 
-# Find the real moon column name
-planet_columns = pd.read_sql("PRAGMA table_info(planets);", conn1)["name"].tolist()
-moon_col = [col for col in planet_columns if "moon" in col.lower()][0]
-
 # STEP 1
-df_no_moons = pd.read_sql(f"""
+df_no_moons = pd.read_sql("""
 SELECT *
 FROM planets
-WHERE {moon_col} = 0;
+WHERE num_of_moons = 0;
 """, conn1)
 
 # STEP 2
@@ -35,10 +33,10 @@ WHERE mass <= 1.00;
 """, conn1)
 
 # STEP 4
-df_mass_moon = pd.read_sql(f"""
+df_mass_moon = pd.read_sql("""
 SELECT *
 FROM planets
-WHERE {moon_col} >= 1
+WHERE num_of_moons >= 1
 AND mass < 1.00;
 """, conn1)
 
@@ -51,8 +49,10 @@ WHERE color LIKE '%blue%';
 
 ##### Part 3: Ordering and Limiting #####
 
+# Create a connection
 conn2 = sqlite3.connect('dogs.db')
 
+# Select all
 pd.read_sql("SELECT * FROM dogs;", conn2)
 
 # STEP 6
@@ -82,15 +82,17 @@ LIMIT 4;
 
 ##### Part 4: Aggregation #####
 
+# Create a connection
 conn3 = sqlite3.connect('babe_ruth.db')
 
+# Select all
 pd.read_sql("""
 SELECT * FROM babe_ruth_stats;
 """, conn3)
 
 # STEP 9
 df_ruth_years = pd.read_sql("""
-SELECT COUNT(*)
+SELECT COUNT(*) 
 FROM babe_ruth_stats;
 """, conn3)
 
