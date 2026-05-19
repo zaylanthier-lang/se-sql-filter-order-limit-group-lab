@@ -3,15 +3,18 @@ import sqlite3
 
 ##### Part I: Basic Filtering #####
 
+# Create the connection
+# Note the connect is 'conn1' since there will be multiple .db used
 conn1 = sqlite3.connect('planets.db')
 
+# Select all
 pd.read_sql("""SELECT * FROM planets; """, conn1)
 
 # STEP 1
 df_no_moons = pd.read_sql("""
 SELECT *
 FROM planets
-WHERE num_moons = 0;
+WHERE number_of_moons = 0;
 """, conn1)
 
 # STEP 2
@@ -20,7 +23,6 @@ SELECT name, mass
 FROM planets
 WHERE LENGTH(name) = 7;
 """, conn1)
-
 
 ##### Part 2: Advanced Filtering #####
 
@@ -35,7 +37,7 @@ WHERE mass <= 1.00;
 df_mass_moon = pd.read_sql("""
 SELECT *
 FROM planets
-WHERE num_moons >= 1
+WHERE number_of_moons >= 1
 AND mass < 1.00;
 """, conn1)
 
@@ -46,11 +48,15 @@ FROM planets
 WHERE color LIKE '%blue%';
 """, conn1)
 
-
 ##### Part 3: Ordering and Limiting #####
 
+# STEP 0
+
+# Create a connection
+# Note the connect is 'conn2' since they will be multiple .db used
 conn2 = sqlite3.connect('dogs.db')
 
+# Select all
 pd.read_sql("SELECT * FROM dogs;", conn2)
 
 # STEP 6
@@ -78,21 +84,23 @@ ORDER BY age DESC
 LIMIT 4;
 """, conn2)
 
-# Sort the 4 oldest dogs alphabetically by breed
-df_4_oldest = df_4_oldest.sort_values("breed").reset_index(drop=True)
-
+df_4_oldest = df_4_oldest.sort_values(by="breed")
 
 ##### Part 4: Aggregation #####
 
+# STEP 0
+
+# Create a connection
+# Note the connect is 'conn3' since they will be multiple .db used
 conn3 = sqlite3.connect('babe_ruth.db')
 
+# Select all
 pd.read_sql("""
-SELECT * FROM babe_ruth_stats;
-""", conn3)
+SELECT * FROM babe_ruth_stats; """, conn3)
 
 # STEP 9
 df_ruth_years = pd.read_sql("""
-SELECT COUNT(year) AS total_years
+SELECT COUNT(*) AS total_years
 FROM babe_ruth_stats;
 """, conn3)
 
@@ -102,12 +110,11 @@ SELECT SUM(HR) AS total_home_runs
 FROM babe_ruth_stats;
 """, conn3)
 
-
 ##### Part 5: Grouping and Aggregation #####
 
 # STEP 11
 df_teams_years = pd.read_sql("""
-SELECT team, COUNT(year) AS number_years
+SELECT team, COUNT(*) AS number_years
 FROM babe_ruth_stats
 GROUP BY team;
 """, conn3)
@@ -119,7 +126,6 @@ FROM babe_ruth_stats
 GROUP BY team
 HAVING AVG(AB) > 200;
 """, conn3)
-
 
 conn1.close()
 conn2.close()
